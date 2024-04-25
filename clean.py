@@ -12,20 +12,20 @@ def main():
 
     if choice == '1':
         print("You've chosen to register new vehicles.")
-        if os.path.exists('vehicle_data.json'):
-            os.remove('vehicle_data.json')
+        if os.path.exists('data/vehicle_data.json'):
+            os.remove('data/vehicle_data.json')
             print("Current vehicle data deleted.")
     elif choice == '2':
-        if os.path.exists('missions_data.json'):
-            os.remove('missions_data.json')
+        if os.path.exists('data/missions_data.json'):
+            os.remove('data/missions_data.json')
             print("Current mission data deleted.")
         else:
             print("Mission data file does not exist.")
     elif choice == '3':
-        if os.path.exists('missions_data.json'):
-            os.remove('missions_data.json')
-        if os.path.exists('vehicle_data.json'):
-            os.remove('vehicle_data.json')
+        if os.path.exists('data/missions_data.json'):
+            os.remove('data/missions_data.json')
+        if os.path.exists('data/vehicle_data.json'):
+            os.remove('data/vehicle_data.json')
         print("All data wiped. You can start from scratch now.")
     else:
         print("Invalid choice. Please run the script again and select a valid option.")
