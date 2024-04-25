@@ -19,7 +19,7 @@ vehicle_map = {
     "Traffic Control Units3": "Police Traffic Control Unit",
     "Riot Police Units": "Riot Police Bus",
     "Riot Police Trailers": "Riot Police Trailer",
-    "Police Prisoner Vans": "Police Prisoner Van",
+    "Prisoner Transports": "Police Prisoner Van",
     "Police Supervisors / Sheriffs": "Police Supervisor / Sheriff Unit",
     "Water Tankers": "Water Tanker",
     "ambulances": "ALS Ambulance",

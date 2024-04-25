@@ -9,7 +9,7 @@ from scripts.transport_patients import transport_all_ems_patients
 from scripts.vehicle_data import gather_vehicle_data
 from scripts.mission_data import gather_mission_data
 from scripts.findtotalnumberofmissions import total_number_of_missions
-from scripts.dispatcher import dispatch_vehicles
+from scripts.dispatch.dispatcher import dispatch_vehicles
 
 vehicle_dispatch_mapping = vehicle_map
 
@@ -64,10 +64,11 @@ while True:
             mission_requirements = mission_info['vehicles']
             max_patients = mission_info.get('patients', 0)
             crashed_cars = mission_info.get('crashed_cars', 0)
+            prisoners = mission_info.get('prisoners', 0)
             print(f"Dispatching vehicles for mission {m_number} with requirements: {mission_requirements}")
             dispatch_vehicles(driver, m_number,
                               'data/vehicle_data.json', mission_requirements, max_patients,
-                              vehicle_dispatch_mapping, crashed_cars, 'data/missions_data.json')
+                              vehicle_dispatch_mapping, crashed_cars, 'data/missions_data.json', prisoners)
         except KeyError as e:
             print(f"Error processing mission {m_number}: {e}")
 

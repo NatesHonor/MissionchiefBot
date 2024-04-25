@@ -22,7 +22,8 @@ def gather_mission_data(driver, mission_numbers):
             mission_help_button.click()
             table_rows = driver.find_elements(By.XPATH, '//table[@class="table table-striped"]/tbody/tr')
 
-            mission_data = {"vehicles": {}, "personnel": {}, "patients": 0, "average_credits": 100, "crashed_cars": 0}
+            mission_data = {"average_credits": 100, "vehicles": {}, "personnel": {},
+                            "patients": 0, "crashed_cars": 0, "prisoners": 0}
             for row in table_rows:
                 columns = row.find_elements(By.TAG_NAME, 'td')
                 requirement = columns[0].text.strip()
@@ -30,14 +31,11 @@ def gather_mission_data(driver, mission_numbers):
 
                 if "Required" in requirement and "Station" not in requirement:
                     if "Personnel" in requirement:
-                        personnel_requirements = value.split('\n')  # Split by line breaks
+                        personnel_requirements = value.split('\n')
                         for personnel_requirement in personnel_requirements:
-                            split_requirement = personnel_requirement.split('x')  # Split by 'x'
-                            if len(split_requirement) == 2:
-                                number_of_personnel, personnel = split_requirement
-                                number_of_personnel = int(number_of_personnel.strip())
-                                personnel = personnel.strip()
-                                mission_data["personnel"][personnel] = number_of_personnel
+                            if 'x' in personnel_requirement:
+                                personnel = personnel_requirement.split('x')[1].strip()
+                                mission_data["personnel"][personnel] = personnel
                             else:
                                 print(f"Unexpected personnel requirement format: {personnel_requirement}")
                     else:
@@ -46,6 +44,8 @@ def gather_mission_data(driver, mission_numbers):
                         mission_data["vehicles"][vehicle] = number_of_vehicles
                 elif requirement == "Max. Patients":
                     mission_data["patients"] = int(value)
+                elif requirement == "Maximum Number of Prisoners":
+                    mission_data["prisoners"] = int(value)
                 elif requirement == "Average credits":
                     mission_data["average_credits"] = int(value)
                 elif requirement == "Maximum amount of crashed cars":

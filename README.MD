@@ -6,11 +6,12 @@ This is a MissionChief bot that automates the process of logging into your accou
 
 # Functions
 
-1. Only dispatch to non inprogress misions (green)
+1. Only dispatch to non in-progress misions (green)
 2. Dispatch vehicles to missions
 3. Transport Patients from missions to one of your hospitals
 4. Transport Prisoners to one of your jails
 5. Automatically dispatches Wrecker or Flatbed Carrier based on Crashed cars in a mission
+6. Automatically dispatches a Prisoner Transport Van if the amount of prisoners is greater than 1
 6. Credit Updater that shows how many credits you will earn
 7. Runs every 3 minutes and only redispatches units to missions that don't already have units
 
