@@ -46,7 +46,7 @@ Replace your_username and your_password with your actual MissionChief credential
 
 3. The bot will log into your MissionChief account and start completing your missions.
 
-4. In order to update your list of vehicles, delete the vehicle_data.py
+4. In order to update your list of vehicles, run `python clean.py`
 
 # Bot in Action:
 
