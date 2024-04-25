@@ -2,18 +2,18 @@
 
 This is a MissionChief bot that automates the process of logging into your account and completing your missions using the Chromium driver.
 
-# IN ORDER FOR THE BOT TO LOAD ALL VEHICLES IT WAITS 30s, SCROLL ON YOUR VEHICLES WINDOW SLOWLY SO IT DETECTS ALL YOUR VEHICLES.
+## IN ORDER FOR THE BOT TO LOAD ALL VEHICLES IT WAITS 30s, SCROLL ON YOUR VEHICLES WINDOW SLOWLY SO IT DETECTS ALL YOUR VEHICLES.
 
 # Functions
 
-1. Only dispatch to non in-progress misions (green)
+1. Only dispatch to non in-progress missions (green)
 2. Dispatch vehicles to missions
 3. Transport Patients from missions to one of your hospitals
 4. Transport Prisoners to one of your jails
 5. Automatically dispatches Wrecker or Flatbed Carrier based on Crashed cars in a mission
 6. Automatically dispatches a Prisoner Transport Van if the amount of prisoners is greater than 1
-6. Credit Updater that shows how many credits you will earn
-7. Runs every 3 minutes and only redispatches units to missions that don't already have units
+7. Credit Updater that shows how many credits you will earn
+8. Runs every 5 minutes
 
 
 ## Prerequisites
@@ -50,11 +50,11 @@ Replace your_username and your_password with your actual MissionChief credential
 
 # Bot in Action:
 
-![img.png](img.png)
-![img_1.png](img_1.png)
+![img.png](imgs/img.png)
+![img_1.png](imgs/img_1.png)
 # After 30m: 
 
-![img_2.png](img_2.png)
+![img_2.png](imgs/img_2.png)
 
 ## Known Bugs
 1. TowTrucks not being dispatched (Since this is a new vehicle give me some time to update the dispatch logic for it)
