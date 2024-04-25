@@ -1,0 +1,6 @@
+.idea/
+__pycache__/
+./config.ini
+config.ini
+missions_data.
+vehicle_data.json
