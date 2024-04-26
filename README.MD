@@ -2,18 +2,27 @@
 
 This is a MissionChief bot that automates the process of logging into your account and completing your missions using the Chromium driver.
 
-## IN ORDER FOR THE BOT TO LOAD ALL VEHICLES IT WAITS 30s, SCROLL ON YOUR VEHICLES WINDOW SLOWLY SO IT DETECTS ALL YOUR VEHICLES.
+### IN ORDER FOR THE BOT TO LOAD ALL VEHICLES IT WAITS 30s, SCROLL ON YOUR VEHICLES WINDOW SLOWLY SO IT DETECTS ALL YOUR VEHICLES.
 
-# Functions
+# Features
 
-1. Only dispatch to non in-progress missions (green)
-2. Dispatch vehicles to missions
-3. Transport Patients from missions to one of your hospitals
-4. Transport Prisoners to one of your jails
-5. Automatically dispatches Wrecker or Flatbed Carrier based on Crashed cars in a mission
-6. Automatically dispatches a Prisoner Transport Van if the amount of prisoners is greater than 1
-7. Credit Updater that shows how many credits you will earn
-8. Runs every 5 minutes
+## Timing
+1. Runs every 5 minutes
+2. Transports Prisoners and Pations before and after each loop
+
+## Dispatching
+1. Dispatch vehicles to missions
+2. Transport Prisoners to one of your jails automatically
+3. Transport Patients from missions to one of your hospitals automatically
+4. If units are already on scene it'll just dispatch the units that are missing
+5. Automatically Dispatches EMS Chief if patients > or = 10
+6. Automatically dispatches Wrecker or Flatbed Carrier based on Crashed cars in a mission
+7. Automatically dispatches a Prisoner Transport Van if the amount of prisoners is greater than 1
+
+## Other
+1. Credit checker
+2. Skips Missions Marked in-progress (yellow and green)
+
 
 
 ## Prerequisites
@@ -57,8 +66,9 @@ Replace your_username and your_password with your actual MissionChief credential
 ![img_2.png](imgs/img_2.png)
 
 ## Known Bugs
-1. TowTrucks not being dispatched (Since this is a new vehicle give me some time to update the dispatch logic for it)
-2. Headless Causes Vehicles not to dispatch
+1. Headless Causes Vehicles not to dispatch
+2. Sometimes EMS Chief Doesn't respond
+3. Vehicles not dispatched for Personnel requirements
 
 # Need Support?
 Well visit this linktree link and join my discord for any questions or support! https://linktr.ee/honorablenate
