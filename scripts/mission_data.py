@@ -1,6 +1,7 @@
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 
+
 def gather_mission_data(driver, mission_numbers):
     missions_data = {}
 
@@ -27,18 +28,17 @@ def gather_mission_data(driver, mission_numbers):
                 mission_data = {"title": mission_title, "average_credits": 100, "vehicles": {}, "personnel": {},
                                 "patients": 0, "prisoners": 0,  "crashed_cars": 0}
 
-                # Check for missing personnel and vehicles on the mission page
                 missing_personnel = driver.find_elements(By.XPATH, '//div[@data-requirement-type="personnel"]')
                 missing_vehicles = driver.find_elements(By.XPATH, '//div[@data-requirement-type="vehicles"]')
 
                 if missing_personnel or missing_vehicles:
                     if missing_personnel:
-                        personnel_requirements = missing_personnel[0].text.split('\n')[1:]
+                        personnel_requirements = missing_personnel[0].text.split(':')[1].split('\n')
                         for personnel_requirement in personnel_requirements:
                             number, personnel_type = personnel_requirement.split('x')
                             mission_data["personnel"][personnel_type.strip()] = int(number)
                     if missing_vehicles:
-                        vehicle_requirements = missing_vehicles[0].text.split(',')[1:]
+                        vehicle_requirements = missing_vehicles[0].text.split(':')[1].split(',')
                         for vehicle_requirement in vehicle_requirements:
                             if '\xa0' in vehicle_requirement:
                                 number, vehicle_type = vehicle_requirement.split('\xa0')
