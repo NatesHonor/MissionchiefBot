@@ -1,7 +1,8 @@
 .idea/
 __pycache__/
 data/missions_data.json
-data/vehicle_data.json
 ./data/missions_data.json
-./config.ini
+data/vehicle_data.json
+./data/vehicle_data.json
 config.ini
+./config.ini
