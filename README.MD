@@ -19,24 +19,21 @@ This is a MissionChief bot that automates the process of logging into your accou
 6. Automatically dispatches Wrecker or Flatbed Carrier based on Crashed cars in a mission
 7. Automatically dispatches a Prisoner Transport Van if the amount of prisoners is greater than 1
 
-## Other
-1. Credit checker
-2. Skips Missions Marked in-progress (yellow and green)
-
-
+## Missions
+1. Ignores Missions in-progress (yellow or green)
+2. Grabs mission data of missing vehicles
 
 ## Prerequisites
 
 Before running the bot, make sure you have the following installed:
 
 - Python 3.x
-- Selenium library
-- Chrome driver (download and set the path in your code)
 
 ## Installation
 
 1. Clone this repository or download the code.
 2. Install the required Python dependencies by running `pip install -r requirements.txt` in the project directory.
+3. Update the `config.ini` 
 
 ## Configuration
 

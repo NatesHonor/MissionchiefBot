@@ -1,5 +1,6 @@
 vehicle_map = {
     "Firetrucks": "Type 1 fire engine",
+    "firetrucks": "Type 1 fire engine",
     "Firetrucks or Heavy Rescues": "Type 1 fire engine",
     "Battalion Chief Vehicles": "Battalion chief unit",
     "Fire Traffic Blocker Units": "Fire Traffic Blocker Unit",
