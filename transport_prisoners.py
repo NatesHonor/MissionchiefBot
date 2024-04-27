@@ -16,10 +16,10 @@ def transport_all_criminals(driver, vehicle_data_file):
             driver.get(vehicle_url)
             try:
                 transport_request_header = WebDriverWait(driver, 1).until(
-                    ec.presence_of_element_located((By.ID, 'h2_sprechwunsch'))
+                    ec.presence_of_element_located((By.XPATH, '//*[@id="h2_sprechwunsch" or text()="Cell Selection"]'))
                 )
                 if transport_request_header:
-                    transport_buttons = driver.find_elements(By.XPATH, "//a[contains(@id, 'btn_approach_')]")
+                    transport_buttons = driver.find_elements(By.XPATH, "//a[contains(@class, 'btn-success')]")
                     if transport_buttons:
                         random.choice(transport_buttons).click()
                         print(f"Transporting criminals in van ID: {vehicle_id}")
@@ -37,12 +37,12 @@ def transport_remaining_criminals(driver, vehicle_data_file):
             driver.get(vehicle_url)
             try:
                 transport_request_header = WebDriverWait(driver, 1).until(
-                    ec.presence_of_element_located((By.ID, 'h2_sprechwunsch'))
+                    ec.presence_of_element_located((By.XPATH, '//*[@id="h2_sprechwunsch" or text()="Cell Selection"]'))
                 )
                 if transport_request_header:
-                    transport_buttons = driver.find_elements(By.XPATH, "//a[contains(@id, 'btn_approach_')]")
+                    transport_buttons = driver.find_elements(By.XPATH, "//a[contains(@class, 'btn-success')]")
                     if transport_buttons:
                         random.choice(transport_buttons).click()
-                        print(f"Transporting criminals in PoliceCar ID: {vehicle_id}")
+                        print(f"Transporting criminals in van ID: {vehicle_id}")
             except (NoSuchElementException, TimeoutException):
                 continue

@@ -2,13 +2,11 @@
 
 This is a MissionChief bot that automates the process of logging into your account and completing your missions using the Chromium driver.
 
-### IN ORDER FOR THE BOT TO LOAD ALL VEHICLES IT WAITS 30s, SCROLL ON YOUR VEHICLES WINDOW SLOWLY SO IT DETECTS ALL YOUR VEHICLES.
-
 # Features
 
 ## Timing
 1. Runs every 5 minutes
-2. Transports Prisoners and Pations before and after each loop
+2. Transports Prisoners and Patients before and after each loop
 
 ## Dispatching
 1. Dispatch vehicles to missions
@@ -68,7 +66,7 @@ Replace your_username and your_password with your actual MissionChief credential
 3. Vehicles not dispatched for Personnel requirements
 
 # Need Support?
-Well visit this linktree link and join my discord for any questions or support! https://linktr.ee/honorablenate
+Well visit this link tree link and join my discord for any questions or support! https://linktr.ee/honorablenate
 
 # Disclaimer
 Please note that using automation tools to interact with websites may violate the terms of service of MissionChief. Make sure to use this bot responsibly and in compliance with the website's policies.
