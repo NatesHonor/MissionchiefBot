@@ -62,9 +62,7 @@ Replace your_username and your_password with your actual MissionChief credential
 ![img_2.png](imgs/img_2.png)
 
 ## Known Bugs
-1. Headless Causes Vehicles not to dispatch
-2. Sometimes EMS Chief Doesn't respond
-3. Vehicles not dispatched for Personnel requirements
+[KnownBugs.md](KnownBugs.MD)
 
 # Need Support?
 Well visit this link tree link and join my discord for any questions or support! https://linktr.ee/honorablenate
