@@ -1,5 +1,6 @@
 import json
 import math
+import time
 
 from scripts.dispatch.vehicles.tow_truck import dispatch_tow_truck
 from scripts.dispatch.vehicles.als_ambulance import dispatch_ems
@@ -35,8 +36,8 @@ def dispatch_vehicles(driver, mission_id, vehicles_file, mission_requirements, p
     dispatch_ems(patients, vehicle_dispatch_mapping, vehicle_types, driver)
 
     for requirement, required_count in mission_requirements.items():
-        vehicle_type_name = next((v for k, v in vehicle_dispatch_mapping.items() if k.lower() == requirement.lower()),
-                                 None)
+        dispatched_count = 0
+        vehicle_type_name = vehicle_dispatch_mapping.get(requirement)
         if not vehicle_type_name:
             print(f"No mapping found for requirement: {requirement}")
             continue
@@ -45,7 +46,6 @@ def dispatch_vehicles(driver, mission_id, vehicles_file, mission_requirements, p
             required_count = calculate_vehicles_needed(required_count, 6)
             print(f"Calculated {required_count} vehicles needed for {required_count * 6} personnel")
 
-        dispatched_count = 0
         for vehicle_id, vehicle_info in vehicle_types.items():
             if vehicle_info['name'] == vehicle_type_name and dispatched_count < required_count:
                 checkbox_id = f"vehicle_checkbox_{vehicle_id}"
@@ -66,6 +66,7 @@ def dispatch_vehicles(driver, mission_id, vehicles_file, mission_requirements, p
         dispatch_button = WebDriverWait(driver, 10).until(ec.element_to_be_clickable((By.ID, 'alert_btn')))
         dispatch_button.click()
         print("Dispatched all selected vehicles.")
+        time.sleep(5)
     except (NoSuchElementException, TimeoutException, ElementClickInterceptedException):
         print("Dispatch button not found or not clickable. Please rerun script")
 
