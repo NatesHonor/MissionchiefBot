@@ -32,6 +32,7 @@ Before running the bot, make sure you have the following installed:
 1. Clone this repository or download the code.
 2. Install the required Python dependencies by running `pip install -r requirements.txt` in the project directory.
 3. Update the `config.ini` 
+4. Enjoy!
 
 ## Configuration
 
