@@ -4,6 +4,15 @@ from selenium.common import NoSuchElementException, ElementClickInterceptedExcep
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
+import sys
+
+from colorama import init
+init(strip=not sys.stdout.isatty()) # strip colors if stdout is redirected
+from termcolor import cprint
+from pyfiglet import figlet_format
+
+cprint(figlet_format('v 1.0.3', font='big'),
+       'yellow', 'on_red', attrs=['bold'])
 
 
 def dispatch_tow_truck(crashed_cars, vehicle_dispatch_mapping, vehicle_types, driver, vehicles_file):
@@ -36,9 +45,10 @@ def dispatch_recovery_vehicle(driver, vehicles_file, recovery_vehicle_type, cras
             try:
                 checkbox = WebDriverWait(driver, 1).until(ec.element_to_be_clickable((By.ID, checkbox_id)))
                 if not checkbox.is_selected():
-                    checkbox.click()
+                    driver.execute_script("arguments[0].scrollIntoView(true);", checkbox)
+                    driver.execute_script("arguments[0].click();", checkbox)
+                    print(f"Vehicle {recovery_vehicle_type}:{vehicle_id} selected.")
                     dispatched_recovery_vehicles += 1
-                    print(f"selected {recovery_vehicle_type}:{vehicle_id}")
                     if dispatched_recovery_vehicles >= crashed_cars:
                         break
             except (NoSuchElementException, ElementClickInterceptedException, TimeoutException):

@@ -27,16 +27,10 @@ if not os.path.exists('data/vehicle_data.json'):
     print("Gathering vehicle data...")
     gather_vehicle_data(driver)
 
-if os.path.exists('data/missions_data.json'):
-    print("Cleaning missions_data.json...")
-    os.remove('data/missions_data.json')
-
 with open('data/vehicle_data.json', 'r') as f:
     vehicle_data = json.load(f)
 
-
-missions_completed = 0
-print("Transporting criminals and patients for accurate mission data...")
+print("Transporting prisoners and patients...")
 transport_all_ems_patients(driver, 'data/vehicle_data.json')
 transport_all_criminals(driver, 'data/vehicle_data.json')
 transport_remaining_criminals(driver, 'data/vehicle_data.json')
@@ -51,12 +45,13 @@ while True:
     with open('data/missions_data.json', 'w') as f:
         json.dump(missions_data, f)
 
-    print("Transporting criminals and patients...")
+    print("Transporting prisoners and patients...")
     transport_all_ems_patients(driver, 'data/vehicle_data.json')
     transport_all_criminals(driver, 'data/vehicle_data.json')
     transport_remaining_criminals(driver, 'data/vehicle_data.json')
 
     for m_number, mission_info in missions_data.items():
+        print(f"Processing mission number: {m_number}, mission info: {mission_info}")
         try:
             mission_requirements = mission_info['vehicles']
             max_patients = mission_info.get('patients', 0)
@@ -67,18 +62,10 @@ while True:
                               'data/vehicle_data.json', mission_requirements, max_patients,
                               vehicle_dispatch_mapping, crashed_cars, 'data/missions_data.json',
                               prisoners, personnel_dispatch_mapping)
-            missions_completed += 1
         except KeyError as e:
             print(f"Error processing mission {m_number}: {e}")
 
     print("Completed all basic mission dispatches!")
-
-    print("Transporting prisoners and patients...")
-    transport_all_ems_patients(driver, 'data/vehicle_data.json')
-    transport_all_criminals(driver, 'data/vehicle_data.json')
-    transport_remaining_criminals(driver, 'data/vehicle_data.json')
-
     print("Assuming the code dispatched all vehicles correctly, it won't go through old missions again!")
-
-    print("Sleeping for 5 minutes...")
-    time.sleep(300)
+    print("Bot sleeps for 30s,  if you want the bot to sleep longer please edit the time in the config.ini")
+    time.sleep(30)

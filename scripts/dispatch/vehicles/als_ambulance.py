@@ -13,8 +13,9 @@ def dispatch_ems(patients, vehicle_dispatch_mapping, vehicle_types, driver):
                 try:
                     checkbox = WebDriverWait(driver, 1).until(ec.element_to_be_clickable((By.ID, checkbox_id)))
                     if not checkbox.is_selected():
-                        checkbox.click()
-                        print(f"Dispatched {ems_chief_type} with vehicle ID: {vehicle_id}")
+                        driver.execute_script("arguments[0].scrollIntoView(true);", checkbox)
+                        driver.execute_script("arguments[0].click();", checkbox)
+                        print(f"Vehicle {ems_chief_type}:{vehicle_id} selected.")
                         break
                 except (NoSuchElementException, ElementClickInterceptedException, TimeoutException):
                     print(f"{ems_chief_type}:{vehicle_id} Already dispatched, continuing...")
@@ -26,11 +27,12 @@ def dispatch_ems(patients, vehicle_dispatch_mapping, vehicle_types, driver):
             try:
                 checkbox = WebDriverWait(driver, 1).until(ec.element_to_be_clickable((By.ID, checkbox_id)))
                 if not checkbox.is_selected():
-                    checkbox.click()
+                    driver.execute_script("arguments[0].scrollIntoView(true);", checkbox)
+                    driver.execute_script("arguments[0].click();", checkbox)
+                    print(f"Vehicle {als_ambulance_type}:{vehicle_id} selected.")
                     patients -= 1
-                    print(f"Dispatched {als_ambulance_type} with vehicle ID: {vehicle_id}")
                     if patients == 0:
                         break
             except (NoSuchElementException, ElementClickInterceptedException, TimeoutException):
-                print(f"{als_ambulance_type}:{vehicle_id} Already dispatched, continuing...")
+                print(f"Skipping {als_ambulance_type}:{vehicle_id}")
                 continue

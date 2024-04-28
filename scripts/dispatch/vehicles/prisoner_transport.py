@@ -33,9 +33,10 @@ def dispatch_prisoner_van(driver, vehicles_file, recovery_vehicle_type, crashed_
                 checkbox = WebDriverWait(driver, 1).until(ec.element_to_be_clickable((By.ID, checkbox_id)))
                 if not checkbox.is_selected():
                     ActionChains(driver).move_to_element(checkbox).perform()
-                    checkbox.click()
+                    driver.execute_script("arguments[0].scrollIntoView(true);", checkbox)
+                    driver.execute_script("arguments[0].click();", checkbox)
+                    print(f"Vehicle {recovery_vehicle_type}:{vehicle_id} selected.")
                     dispatched_recovery_vehicles += 1
-                    print(f"selected {recovery_vehicle_type}:{vehicle_id}")
                     if dispatched_recovery_vehicles >= crashed_cars:
                         break
             except (NoSuchElementException, ElementClickInterceptedException, TimeoutException):

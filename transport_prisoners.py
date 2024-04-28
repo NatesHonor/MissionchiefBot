@@ -32,7 +32,7 @@ def transport_remaining_criminals(driver, vehicle_data_file):
         vehicle_data = json.load(f)
 
     for vehicle_id, vehicle_info in vehicle_data.items():
-        if vehicle_info['name'].lower() == 'police car':
+        if vehicle_info['name'].lower() == 'patrol car':
             vehicle_url = f"https://www.missionchief.com/vehicles/{vehicle_id}"
             driver.get(vehicle_url)
             try:
