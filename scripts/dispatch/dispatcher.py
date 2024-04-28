@@ -25,6 +25,14 @@ def dispatch_vehicles(driver, mission_id, vehicles_file, mission_requirements, p
     driver.get(mission_url)
 
     try:
+        transport_needed_alert = driver.find_element(By.XPATH, "//*[contains(text(), 'Transport is needed!')]")
+        if transport_needed_alert:
+            print(f"Skipping mission {mission_id} because it has a transport request.")
+            return
+    except NoSuchElementException:
+        pass
+
+    try:
         WebDriverWait(driver, 10).until(ec.presence_of_element_located((By.ID, 'all')))
     except TimeoutException:
         remove_mission(mission_id, mission_data)

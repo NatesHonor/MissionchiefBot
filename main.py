@@ -1,6 +1,7 @@
 import time
 import json
 import os
+import threading
 
 from data.vehicle_mapping import vehicle_map
 from data.personnel_mapping import personnel_map
@@ -17,6 +18,7 @@ vehicle_dispatch_mapping = vehicle_map
 personnel_dispatch_mapping = personnel_map
 print("Logging in...")
 driver = login()
+driver1 = login()
 print("Login Successful!")
 
 if os.path.exists('data/vehicle_data.json'):
@@ -30,10 +32,18 @@ if not os.path.exists('data/vehicle_data.json'):
 with open('data/vehicle_data.json', 'r') as f:
     vehicle_data = json.load(f)
 
-print("Transporting prisoners and patients...")
-transport_all_ems_patients(driver, 'data/vehicle_data.json')
-transport_all_criminals(driver, 'data/vehicle_data.json')
-transport_remaining_criminals(driver, 'data/vehicle_data.json')
+
+def transport_loop():
+    while True:
+        print("Transporting prisoners and patients...")
+        transport_all_ems_patients(driver1, 'data/vehicle_data.json')
+        transport_all_criminals(driver1, 'data/vehicle_data.json')
+        transport_remaining_criminals(driver1, 'data/vehicle_data.json')
+        time.sleep(300)  # Sleep for 5 minutes
+
+
+transport_thread = threading.Thread(target=transport_loop)
+transport_thread.start()
 
 while True:
     print("Gathering total number of missions...")
@@ -44,11 +54,6 @@ while True:
 
     with open('data/missions_data.json', 'w') as f:
         json.dump(missions_data, f)
-
-    print("Transporting prisoners and patients...")
-    transport_all_ems_patients(driver, 'data/vehicle_data.json')
-    transport_all_criminals(driver, 'data/vehicle_data.json')
-    transport_remaining_criminals(driver, 'data/vehicle_data.json')
 
     for m_number, mission_info in missions_data.items():
         print(f"Processing mission number: {m_number}, mission info: {mission_info}")
