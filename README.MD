@@ -3,7 +3,7 @@ This is a MissionChief bot that automates the process of logging into your accou
 
 
 ## 🕒 Timing
-1. Runs every 5 minutes
+1. Runs every 30 seconds
 2. Transports Prisoners and Patients before and after each loop
 
 ## 🚨 Dispatching
