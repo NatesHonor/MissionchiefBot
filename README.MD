@@ -53,13 +53,10 @@ Replace your_username and your_password with your actual MissionChief credential
 4. In order to update your list of vehicles, run python clean.py
 
 ## 📸 Bot in Action:
-!img.png !img_1.png
-
-After 30m:
-!img_2.png
+(wip)
 
 ## 🐞 Known Bugs
-KnownBugs.md
+[Click HERE](KnownBugs.MD)
 
 ## 🆘 Need Support?
 Visit this link tree link and join my discord for any questions or support!
