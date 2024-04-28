@@ -38,6 +38,10 @@ Before running the bot, make sure you have the following installed:
 [credentials]
 username = your_username
 password = your_password
+
+[client]
+server = us
+headless = true
 ```
 
 Replace your_username and your_password with your actual MissionChief credentials.

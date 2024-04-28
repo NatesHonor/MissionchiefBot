@@ -1,2 +1,5 @@
 selenium
 configparser
+pyfiglet
+termcolor
+colorama

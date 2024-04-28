@@ -36,9 +36,19 @@ def gather_mission_data(driver, mission_numbers):
                     if missing_personnel:
                         for personnel_element in missing_personnel:
                             personnel_text = personnel_element.text
-                            personnel = personnel_text.replace("x", "")
-                            personnel_types = int(''.join([char for char in personnel_text if char.isdigit()]))
-                            mission_data["personnel"][personnel] = personnel_types
+                            personnel_type = personnel_text.replace("Missing Personnel:", "").strip()
+                            if 'x' in personnel_type:
+                                number, personnel_type = personnel_type.split('x')
+                                personnel_types = int(number.strip())
+                            else:
+                                if personnel_type[0].isdigit():
+                                    number = ''.join([char for char in personnel_type if char.isdigit()])
+                                    personnel_type = personnel_type.replace(number, '').strip()
+                                    personnel_types = int(number)
+                                else:
+                                    personnel_types = 1
+                            mission_data["personnel"][personnel_type] = personnel_types
+
                     if missing_vehicles:
                         for vehicle_element in missing_vehicles:
                             requirement = vehicle_element.text.strip().replace("Missing Vehicles: ", "")
@@ -59,11 +69,13 @@ def gather_mission_data(driver, mission_numbers):
                         value = columns[1].text.strip()
 
                         if "Required" in requirement and "Station" not in requirement:
-                            if requirement == "Required Personnel":
+                            if requirement == "Required Personnel Available":
                                 personnel_requirements = value.split('\n')
                                 for personnel_requirement in personnel_requirements:
                                     number, personnel_type = personnel_requirement.split('x')
-                                    mission_data["personnel"][personnel_type.strip()] = int(number)
+                                    personnel_type = personnel_type.replace(number,
+                                                                            '').strip()
+                                    mission_data["personnel"][personnel_type] = int(number)
                             else:
                                 vehicle = requirement.replace("Required ", "")
                                 number_of_vehicles = int(''.join([char for char in value if char.isdigit()]))
@@ -78,6 +90,7 @@ def gather_mission_data(driver, mission_numbers):
                             mission_data["crashed_cars"] = int(value)
 
                 missions_data[mission_number] = mission_data
+                print(f"Mission Data for {mission_title}: {mission_data}")
 
         except NoSuchElementException:
             print(f"Mission help button not found for mission {mission_number}, skipping this mission.")

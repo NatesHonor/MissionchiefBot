@@ -2,7 +2,9 @@ import time
 import json
 import os
 
-from data.mapping import vehicle_map
+from data.vehicle_mapping import vehicle_map
+from data.personnel_mapping import personnel_map
+
 from transport_prisoners import transport_all_criminals, transport_remaining_criminals
 from scripts.logon import login
 from scripts.transport_patients import transport_all_ems_patients
@@ -12,7 +14,7 @@ from scripts.findtotalnumberofmissions import total_number_of_missions
 from scripts.dispatch.dispatcher import dispatch_vehicles
 
 vehicle_dispatch_mapping = vehicle_map
-
+personnel_dispatch_mapping = personnel_map
 print("Logging in...")
 driver = login()
 print("Login Successful!")
@@ -34,6 +36,10 @@ with open('data/vehicle_data.json', 'r') as f:
 
 
 missions_completed = 0
+print("Transporting criminals and patients for accurate mission data...")
+transport_all_ems_patients(driver, 'data/vehicle_data.json')
+transport_all_criminals(driver, 'data/vehicle_data.json')
+transport_remaining_criminals(driver, 'data/vehicle_data.json')
 
 while True:
     print("Gathering total number of missions...")
@@ -45,7 +51,7 @@ while True:
     with open('data/missions_data.json', 'w') as f:
         json.dump(missions_data, f)
 
-    print("Now we will transport criminals and patients")
+    print("Transporting criminals and patients...")
     transport_all_ems_patients(driver, 'data/vehicle_data.json')
     transport_all_criminals(driver, 'data/vehicle_data.json')
     transport_remaining_criminals(driver, 'data/vehicle_data.json')
@@ -56,23 +62,21 @@ while True:
             max_patients = mission_info.get('patients', 0)
             crashed_cars = mission_info.get('crashed_cars', 0)
             prisoners = mission_info.get('prisoners', 0)
-            personnel = mission_info.get('personnel')
-            print(f"Dispatching vehicles for mission {m_number} with requirements: {mission_requirements}")
+            print(f"Dispatching vehicles for mission {m_number}")
             dispatch_vehicles(driver, m_number,
                               'data/vehicle_data.json', mission_requirements, max_patients,
-                              vehicle_dispatch_mapping, crashed_cars, 'data/missions_data.json', prisoners)
+                              vehicle_dispatch_mapping, crashed_cars, 'data/missions_data.json',
+                              prisoners, personnel_dispatch_mapping)
             missions_completed += 1
         except KeyError as e:
             print(f"Error processing mission {m_number}: {e}")
 
     print("Completed all basic mission dispatches!")
 
-    print("Now we will transport any requests for Ambulances!")
+    print("Transporting prisoners and patients...")
     transport_all_ems_patients(driver, 'data/vehicle_data.json')
-    print("Completed all EMS transports!")
     transport_all_criminals(driver, 'data/vehicle_data.json')
     transport_remaining_criminals(driver, 'data/vehicle_data.json')
-    print("Completed all Prisoner transports!")
 
     print("Assuming the code dispatched all vehicles correctly, it won't go through old missions again!")
 
