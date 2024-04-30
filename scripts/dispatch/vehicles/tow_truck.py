@@ -1,21 +1,10 @@
-import json
-
 from selenium.common import NoSuchElementException, ElementClickInterceptedException, TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
-import sys
-
-from colorama import init
-init(strip=not sys.stdout.isatty()) # strip colors if stdout is redirected
-from termcolor import cprint
-from pyfiglet import figlet_format
-
-cprint(figlet_format('v 1.0.3', font='big'),
-       'yellow', 'on_red', attrs=['bold'])
 
 
-def dispatch_tow_truck(crashed_cars, vehicle_dispatch_mapping, vehicle_types, driver, vehicles_file):
+def dispatch_tow_truck(crashed_cars, vehicle_dispatch_mapping, vehicle_pool, driver):
     if crashed_cars > 0:
         if crashed_cars == 1:
             recovery_vehicle_type = vehicle_dispatch_mapping['Wreckers']
@@ -24,22 +13,22 @@ def dispatch_tow_truck(crashed_cars, vehicle_dispatch_mapping, vehicle_types, dr
         else:
             recovery_vehicle_type = [vehicle_dispatch_mapping['Wreckers'], vehicle_dispatch_mapping['Flatbed Carriers']]
 
-        for vehicle_id, vehicle_info in vehicle_types.items():
+        for vehicle_id in list(vehicle_pool.keys()):
+            vehicle_info = vehicle_pool[vehicle_id]
             if isinstance(recovery_vehicle_type, list):
                 for recovery_type in recovery_vehicle_type:
                     if vehicle_info['name'] == recovery_type:
-                        dispatch_recovery_vehicle(driver, vehicles_file, recovery_vehicle_type, crashed_cars)
+                        dispatch_recovery_vehicle(driver, vehicle_pool, recovery_vehicle_type, crashed_cars)
             else:
                 if vehicle_info['name'] == recovery_vehicle_type:
-                    dispatch_recovery_vehicle(driver, vehicles_file, recovery_vehicle_type, crashed_cars)
+                    dispatch_recovery_vehicle(driver, vehicle_pool, recovery_vehicle_type, crashed_cars)
 
 
-def dispatch_recovery_vehicle(driver, vehicles_file, recovery_vehicle_type, crashed_cars):
+def dispatch_recovery_vehicle(driver, vehicle_pool, recovery_vehicle_type, crashed_cars):
     dispatched_recovery_vehicles = 0
-    with open(vehicles_file, 'r') as f:
-        vehicle_types = json.load(f)
 
-    for vehicle_id, vehicle_info in vehicle_types.items():
+    for vehicle_id in list(vehicle_pool.keys()):
+        vehicle_info = vehicle_pool[vehicle_id]
         if vehicle_info['name'] == recovery_vehicle_type:
             checkbox_id = f"vehicle_checkbox_{vehicle_id}"
             try:
@@ -49,9 +38,9 @@ def dispatch_recovery_vehicle(driver, vehicles_file, recovery_vehicle_type, cras
                     driver.execute_script("arguments[0].click();", checkbox)
                     print(f"Vehicle {recovery_vehicle_type}:{vehicle_id} selected.")
                     dispatched_recovery_vehicles += 1
+                    del vehicle_pool[vehicle_id]  # This is now safe
                     if dispatched_recovery_vehicles >= crashed_cars:
                         break
             except (NoSuchElementException, ElementClickInterceptedException, TimeoutException):
-                print(f"Checkbox not found or not clickable for {recovery_vehicle_type} with vehicle ID {vehicle_id}.")
-                print(f"Vehicle probably dispatched... Continuing!")
+                print(f"Skipping {recovery_vehicle_type}:{vehicle_id}.")
                 continue

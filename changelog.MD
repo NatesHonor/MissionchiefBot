@@ -1,15 +1,14 @@
-# 🚀 Updates (v1.0.3)
+# 🚀 Updates (v1.0.4)
 
 ## 🎉 New Features:
 
-- Reworked dispatch logic
-- More handling so missions can be solved quicker
-- Wait time descreased to 30s
-  
+- Optimized code for efficiency
+- Optimized transport requests
+- 
 ## 🐞 Bug Fixes:
- 
-- Duplicate Dispatches: 
-  - We’ve squashed a bug that was causing duplicate dispatches, ensuring a more accurate game play.
-- Updated DispatchMapping
 
-## `Remember, your feedback is important to us and helps us make the game better! 🙌`
+- Updated DispatchMapping
+- Fixed issue with mission dispatching
+- Fixed issue with transport requests
+- 
+### `Remember, your feedback is important to us and helps us make the game better! 🙌`

@@ -1,5 +1,3 @@
-import json
-import time
 
 from data.mission_utils import remove_mission
 from scripts.dispatch.vehicles.tow_truck import dispatch_tow_truck
@@ -13,14 +11,8 @@ from selenium.webdriver.support import expected_conditions as ec
 from selenium.common.exceptions import NoSuchElementException, TimeoutException, ElementClickInterceptedException
 
 
-def dispatch_vehicles(driver, mission_id, vehicles_file, mission_requirements, patients,
+def dispatch_vehicles(driver, mission_id, vehicle_pool, mission_requirements, patients,
                       vehicle_dispatch_mapping, crashed_cars, mission_data_file, prisoners, personnel_dispatch_mapping):
-    with open(vehicles_file, 'r') as f:
-        vehicle_types = json.load(f)
-
-    with open(mission_data_file, 'r') as f:
-        mission_data = json.load(f)
-
     mission_url = f"https://www.missionchief.com/missions/{mission_id}"
     driver.get(mission_url)
 
@@ -35,13 +27,13 @@ def dispatch_vehicles(driver, mission_id, vehicles_file, mission_requirements, p
     try:
         WebDriverWait(driver, 10).until(ec.presence_of_element_located((By.ID, 'all')))
     except TimeoutException:
-        remove_mission(mission_id, mission_data)
+        remove_mission(mission_id, mission_data_file)
         return
 
-    dispatch_personnel(driver, mission_id, vehicles_file, mission_data_file, personnel_dispatch_mapping)
-    dispatch_tow_truck(crashed_cars, vehicle_dispatch_mapping, vehicle_types, driver, vehicles_file)
-    dispatch_police_transport(prisoners, vehicle_dispatch_mapping, vehicle_types, driver, vehicles_file)
-    dispatch_ems(patients, vehicle_dispatch_mapping, vehicle_types, driver)
+    dispatch_personnel(driver, mission_id, vehicle_pool, mission_data_file, personnel_dispatch_mapping)
+    dispatch_tow_truck(crashed_cars, vehicle_dispatch_mapping, vehicle_pool, driver)
+    dispatch_police_transport(prisoners, vehicle_dispatch_mapping, vehicle_pool, driver)
+    dispatch_ems(patients, vehicle_dispatch_mapping, vehicle_pool, driver)
 
     for requirement, required_count in mission_requirements.items():
         dispatched_count = 0
@@ -50,15 +42,22 @@ def dispatch_vehicles(driver, mission_id, vehicles_file, mission_requirements, p
             print(f"No mapping found for requirement: {requirement}")
             continue
 
-        for vehicle_id, vehicle_info in vehicle_types.items():
-            if vehicle_info['name'] == vehicle_type_name and dispatched_count < required_count:
+        if (vehicle_type_name == "K-9 Unit" or vehicle_type_name == "K-9 Units") and required_count > 2:
+            print(f"Dispatching K-9 Carrier instead of K-9 Unit for mission {mission_id}.")
+            vehicle_type_name = "K-9 Carrier"
+
+        matching_vehicles = {vehicle_id: info for vehicle_id, info in vehicle_pool.copy().items() if
+                             info['name'] == vehicle_type_name}
+        vehicle_ids_to_delete = []
+        for vehicle_id, vehicle_info in matching_vehicles.items():
+            if dispatched_count < required_count:
                 checkbox_id = f"vehicle_checkbox_{vehicle_id}"
                 try:
                     checkbox = WebDriverWait(driver, 0).until(ec.element_to_be_clickable((By.ID, checkbox_id)))
                     driver.execute_script("arguments[0].scrollIntoView(true);", checkbox)
                     driver.execute_script("arguments[0].click();", checkbox)
                     dispatched_count += 1
-                    print(f"Vehicle {vehicle_type_name}:{vehicle_id} selected.")
+                    print(f"Selected {vehicle_type_name}:{vehicle_id}")
                     if dispatched_count == required_count:
                         break
                 except TimeoutException:
@@ -72,11 +71,15 @@ def dispatch_vehicles(driver, mission_id, vehicles_file, mission_requirements, p
                 except (NoSuchElementException, TimeoutException):
                     print(f"Skipping {vehicle_type_name}:{vehicle_id}.")
                     continue
+                vehicle_ids_to_delete.append(vehicle_id)
+
+        for vehicle_id in vehicle_ids_to_delete:
+            del vehicle_pool[vehicle_id]
 
     try:
         dispatch_button = WebDriverWait(driver, 10).until(ec.element_to_be_clickable((By.ID, 'alert_btn')))
-        dispatch_button.click()
+        driver.execute_script("arguments[0].scrollIntoView();", dispatch_button)
+        driver.execute_script("arguments[0].click();", dispatch_button)
         print("Dispatched all selected vehicles.")
-        time.sleep(5)
-    except (NoSuchElementException, TimeoutException, ElementClickInterceptedException):
-        print("Dispatch button not found. Moving on...")
+    except NoSuchElementException:
+        print(f"Could not find dispatch button for mission {mission_id}.")

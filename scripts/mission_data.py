@@ -31,12 +31,22 @@ def gather_mission_data(driver, mission_numbers):
 
                 missing_personnel = driver.find_elements(By.XPATH, '//div[@data-requirement-type="personnel"]')
                 missing_vehicles = driver.find_elements(By.XPATH, '//div[@data-requirement-type="vehicles"]')
+                patient_elements = driver.find_elements(By.CLASS_NAME, "mission_patient")
+                for patient in patient_elements:
+                    try:
+                        missing_text = patient.find_element(By.XPATH, ".//div[@class='alert alert-danger']").text
+                        if "Ambulance" in missing_text:
+                            mission_data["vehicles"]["Ambulance"] = mission_data["vehicles"].get("Ambulance", 0) + 1
+                        elif "EMS Chief" in missing_text:
+                            mission_data["vehicles"]["EMS Chief"] = mission_data["vehicles"].get("EMS Chief", 0) + 1
+                    except NoSuchElementException:
+                        continue
 
                 if missing_personnel or missing_vehicles:
                     if missing_personnel:
                         for personnel_element in missing_personnel:
                             personnel_text = personnel_element.text
-                            personnel_type = personnel_text.replace("Missing Personnel:", "").strip()
+                            personnel_type = personnel_text.replace("Missing Personnel: ", "").strip()
                             if 'x' in personnel_type:
                                 number, personnel_type = personnel_type.split('x')
                                 personnel_types = int(number.strip())
@@ -84,14 +94,10 @@ def gather_mission_data(driver, mission_numbers):
                             mission_data["patients"] = int(value)
                         elif requirement == "Maximum Number of Prisoners":
                             mission_data["prisoners"] = int(value)
-                        elif requirement == "Average credits":
-                            mission_data["average_credits"] = int(value)
                         elif requirement == "Maximum amount of crashed cars":
                             mission_data["crashed_cars"] = int(value)
 
                 missions_data[mission_number] = mission_data
-                print(f"Mission Data for {mission_title}: {mission_data}")
-
         except NoSuchElementException:
             print(f"Mission help button not found for mission {mission_number}, skipping this mission.")
             continue
