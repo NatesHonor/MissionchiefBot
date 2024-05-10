@@ -1,22 +1,18 @@
-import configparser
 import logging
 import math
+import configparser
 
-from data.mission_utils import remove_mission
-from scripts.dispatch.vehicles.tow_truck import dispatch_tow_truck
-from scripts.dispatch.vehicles.als_ambulance import dispatch_ems
-from scripts.dispatch.vehicles.prisoner_transport import dispatch_police_transport
-from scripts.dispatch.personnel.personnel import dispatch_personnel
-from scripts.dispatch.functions.select import select_vehicle
-from scripts.dispatch.functions.check import transport_needed, prisoner_needed, wait_for_element
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 
-
-logging.basicConfig(level=logging.INFO)
-
+from scripts.dispatch.vehicles.tow_truck import dispatch_tow_truck
+from scripts.dispatch.vehicles.als_ambulance import dispatch_ems
+from scripts.dispatch.vehicles.prisoner_transport import dispatch_police_transport
+from scripts.dispatch.personnel.personnel import dispatch_personnel
+from scripts.dispatch.functions.select import select_vehicle
+from data.mission_utils import remove_mission
 config = configparser.ConfigParser()
 config.read('config.ini')
 
@@ -26,9 +22,19 @@ def dispatch_vehicles(driver, mission_id, vehicle_pool, mission_requirements, pa
     mission_url = f"https://www.missionchief.com/missions/{mission_id}"
     driver.get(mission_url)
 
-    transport_needed(driver, mission_id)
-    prisoner_needed(driver, mission_id)
-    wait_for_element(driver, By.ID, 'all')
+    try:
+        transport_needed_alert = driver.find_element(By.XPATH, "//*[contains(text(), 'Transport is needed!')]")
+        if transport_needed_alert:
+            logging.info(f"Skipping mission {mission_id} because it has a transport request.")
+            return
+    except NoSuchElementException:
+        pass
+
+    try:
+        WebDriverWait(driver, 10).until(ec.presence_of_element_located((By.ID, 'all')))
+    except TimeoutException:
+        remove_mission(mission_id, mission_data_file)
+        return
 
     dispatch_personnel(driver, mission_id, vehicle_pool, mission_data_file, personnel_dispatch_mapping)
     dispatch_tow_truck(crashed_cars, vehicle_dispatch_mapping, vehicle_pool, driver)
